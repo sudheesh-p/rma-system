@@ -1,1 +1,2 @@
-# KSI-UI
+Run npm i
+npm run start
