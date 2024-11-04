@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import Body from "./components/Body";
+import  RecieptReturns from './components/RecieptReturns';
+import BatchManagement from './components/BatchManagement';
+import ROManagement from './components/ROManagement';
+import CleaningSorting from './components/CleaningSorting';
+import RMAList from './components/RMAList';
 
 function App() {
+  const appRouter = createBrowserRouter([
+    {
+      path: '/',
+      element: <Body />,
+      children: [
+        {
+          path: '/',
+          element: <RecieptReturns />,
+        },
+        {
+          path: '/batch-management',
+          element: <BatchManagement />
+        },
+        {
+          path: '/RO-management',
+          element: <ROManagement />
+        },
+        {
+          path: '/cleaning-sorting',
+          element: <CleaningSorting />
+        },
+        {
+          path: '/RMA',
+          element: <RMAList />
+        },
+      ]
+    }
+
+  ])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <RouterProvider router={appRouter} />
     </div>
   );
 }

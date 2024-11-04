@@ -1,0 +1,19 @@
+.side-nav {
+    width: 250px;
+    border-right: 1px solid #ddd;
+  }
+  .custom-link {
+    color: white !important; /* Ensures text remains white */
+    padding: 10px;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+  
+  .custom-link:hover {
+    background-color: #333; /* Darker background on hover */
+    color: white !important; /* Keeps text white on hover */
+  }
+  .side-nav .custom-link .active {
+    background-color: #444; /* Darker background for active link */
+    font-weight: bold;      /* Make the active link bold */
+  }
