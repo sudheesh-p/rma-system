@@ -52,7 +52,7 @@ const RecieptReturns = () => {
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Reciept And Returns</h2>
-        <button className="btn btn-primary">Create Batch</button>
+        <button className="btn btn-primary">Create New Batch</button>
       </div>
       <div className="row">
         <div className="col-md-3 mb-3">
@@ -106,6 +106,7 @@ const RecieptReturns = () => {
           />
         </div>
       </div>
+      <div className='table-responsive'>
       <table className="table">
         <thead className='table-dark'>
           <tr>
@@ -148,6 +149,7 @@ const RecieptReturns = () => {
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="d-grid gap-2 d-md-block mt-5">
         <button className="btn btn-danger me-md-3" type="button">Delete Batch</button>
