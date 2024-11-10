@@ -45,31 +45,31 @@ function Sidenav({ isOpen, toggleSidebar }) {
         <hr />
         <ul className="nav nav-pills flex-column mb-auto">
           <li className="nav-item">
-            <NavLink to="/" className="nav-link text-white" activeClassName="active">
+            <NavLink to="/" className="nav-link text-white" activeclassname="active">
              <i className="bi bi-house-door-fill me-2"></i>
               Reciept and Returns
            </NavLink>
           </li>
           <li>
-            <NavLink to="/batch-management" className="nav-link text-white" activeClassName="active">
+            <NavLink to="/batch-management" className="nav-link text-white" activeclassname="active">
               <i className="bi bi-speedometer2 me-2"></i>
                 Batch Management
             </NavLink>
           </li>
           <li>
-            <NavLink to="/RO-management" className="nav-link text-white" activeClassName="active">
+            <NavLink to="/RO-management" className="nav-link text-white" activeclassname="active">
               <i className="bi bi-table me-2"></i>
               RO Management
             </NavLink>
           </li>
           <li>
-            <NavLink to="/cleaning-sorting" className="nav-link text-white" activeClassName="active">
+            <NavLink to="/cleaning-sorting" className="nav-link text-white" activeclassname="active">
               <i className="bi bi bi-grid me-2 me-2"></i>
               Cleaning and Sorting
             </NavLink>
           </li>
           <li>
-            <NavLink to="/RMA" className="nav-link text-white" activeClassName="active">
+            <NavLink to="/RMA" className="nav-link text-white" activeclassname="active">
               <i className="bi bi-people me-2"></i>
               RMA Management
             </NavLink>

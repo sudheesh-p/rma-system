@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import useFetchList from '../utils/useFetchList';
+import { FETCH_CUST_LIST, FETCH_BATCH_LIST } from '../Constants'
 
 const RecieptReturns = () => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -7,31 +10,25 @@ const RecieptReturns = () => {
     customerName: '',
     recievedDate: ''
   });
-  const batchList = [
-    { id: '1', batchNumber: 'R3434541', customerName: 'Andras', cxRefrence: '9789871', recievedDate: '28/10/2024', totalItems: "40", replacedItems: "35", cancelledItems: "10", pendingItems: "5" },
-    { id: '2', batchNumber: 'R3434542', customerName: 'Andras1', cxRefrence: '9789872', recievedDate: '28/10/2024', totalItems: "40", replacedItems: "35", cancelledItems: "10", pendingItems: "5" },
-    { id: '3', batchNumber: 'R3434543', customerName: 'Andras2', cxRefrence: '9789873', recievedDate: '28/10/2024', totalItems: "40", replacedItems: "35", cancelledItems: "10", pendingItems: "5" },
-    { id: '4', batchNumber: 'R3434544', customerName: 'Andras3', cxRefrence: '9789874', recievedDate: '28/10/2024', totalItems: "40", replacedItems: "35", cancelledItems: "10", pendingItems: "5" },
-    { id: '5', batchNumber: 'R3434545', customerName: 'Andras4', cxRefrence: '9789875', recievedDate: '28/10/2024', totalItems: "40", replacedItems: "35", cancelledItems: "10", pendingItems: "5" }
-  ];
-
-  const uniqCustomers = [...new Set(batchList.map(item => item.customerName))];
-  const uniqBatchNumber = [...new Set(batchList.map(item => item.batchNumber))];
+  const navigate = useNavigate();
+  const batchList = useFetchList(FETCH_BATCH_LIST)
+  const customerList = useFetchList(FETCH_CUST_LIST);
+  const uniqBatchNumber = [...new Set(batchList.map(item => item.batchNo))];
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
-  const  filterdBatchList= batchList.filter((row) => {
-    const isNameMatch = !filters.customerName || row.customerName.includes(filters.customerName);
-    const isBatchMatch = !filters.batchNumber || row.batchNumber.includes(filters.batchNumber);
-    const isRecievedDate = !filters.recievedDate || row.recievedDate.includes(filters.recievedDate);
-    return (!filters.customerName && !filters.batchNumber && !filters.recievedDate) || (isNameMatch && isBatchMatch && isRecievedDate);
+  const filterdBatchList = batchList.filter((row) => {
+    const isNameMatch = !filters.customerId || row.customerId.includes(filters.customerId);
+    const isBatchMatch = !filters.batchNo || row.batchNo.includes(filters.batchNo);
+    const isReceivedDate = !filters.receivedDate || row.receivedDate.includes(filters.receivedDate);
+    return (!filters.customerName && !filters.batchNo && !filters.receivedDate) || (isNameMatch && isBatchMatch && isReceivedDate);
   });
   // Handle select all rows
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedItems(batchList.map((row) => row.id)); // Select all items
+      setSelectedItems(batchList.map((row) => row.batchNo)); // Select all items
     } else {
       setSelectedItems([]); // Deselect all items
     }
@@ -48,11 +45,16 @@ const RecieptReturns = () => {
     });
   };
 
+  // handle navigation to create new batch
+  const navigateToCreateNBatch = () => {
+    navigate('/batch-management');
+  }
+
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Reciept And Returns</h2>
-        <button className="btn btn-primary">Create New Batch</button>
+        <button className="btn btn-primary" onClick={navigateToCreateNBatch}>Create New Batch</button>
       </div>
       <div className="row">
         <div className="col-md-3 mb-3">
@@ -60,29 +62,29 @@ const RecieptReturns = () => {
             name="customerName"
             className="form-select"
             placeholder="Filter by Customer"
-            value={filters.customerName}
+            value={filters.customerId}
             onChange={handleFilterChange}
           >
             <option>Select Customer</option>
-            {uniqCustomers.map((name, index) => (
-              <option key={index} value={name}>
-                {name}
+            {customerList.map((custObj) => (
+              <option key={custObj.customerId} value={custObj.customerId}>
+                {custObj.customerName}
               </option>
             ))}
           </select>
         </div>
         <div className="col-md-3 mb-3">
           <select
-            name="batchNumber"
+            name="batchNo"
             className="form-select"
             placeholder="Filter by Batch Number"
-            value={filters.batchNumber}
+            value={filters.batchNo}
             onChange={handleFilterChange}
           >
             <option>Select Batch Number</option>
-            {uniqBatchNumber.map((batchNumber, index) => (
-              <option key={index} value={batchNumber}>
-                {batchNumber}
+            {uniqBatchNumber.map((batchNo, index) => (
+              <option key={index} value={batchNo}>
+                {batchNo}
               </option>
             ))}
           </select>
@@ -90,10 +92,10 @@ const RecieptReturns = () => {
         <div className="col-md-3 mb-3">
           <input
             type="date"
-            name="recievedDate"
+            name="receivedDate"
             className="form-control"
             placeholder="From Date"
-            value={filters.recievedDate}
+            value={filters.receivedDate}
             onChange={handleFilterChange}
           />
         </div>
@@ -107,48 +109,48 @@ const RecieptReturns = () => {
         </div>
       </div>
       <div className='table-responsive'>
-      <table className="table">
-        <thead className='table-dark'>
-          <tr>
-            <th>
-              <input
-                type="checkbox"
-                onChange={handleSelectAll}
-                checked={selectedItems.length === batchList.length}
-              />
-            </th>
-            <th>Batch No</th>
-            <th>Customer</th>
-            <th>Recieved Date</th>
-            <th>Cx Reference</th>
-            <th>Total Items</th>
-            <th>Replaced</th>
-            <th>Cancelled</th>
-            <th>Pending</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filterdBatchList.map((row, index) => (
-            <tr key={index}>
-              <td>
+        <table className="table">
+          <thead className='table-dark'>
+            <tr>
+              <th>
                 <input
                   type="checkbox"
-                  checked={selectedItems.includes(row.id)}
-                  onChange={() => handleRowSelect(row.id)}
+                  onChange={handleSelectAll}
+                  checked={selectedItems.length === batchList.length}
                 />
-              </td>
-              <td>{row.batchNumber}</td>
-              <td>{row.customerName}</td>
-              <td>{row.recievedDate}</td>
-              <td>{row.cxRefrence}</td>
-              <td>{row.totalItems}</td>
-              <td>{row.replacedItems}</td>
-              <td>{row.cancelledItems}</td>
-              <td>{row.pendingItems}</td>
+              </th>
+              <th>Batch No</th>
+              <th>Customer</th>
+              <th>Recieved Date</th>
+              <th>Cx Reference</th>
+              <th>Total Items</th>
+              <th>Replaced</th>
+              <th>Cancelled</th>
+              <th>Pending</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filterdBatchList.map((row, index) => (
+              <tr key={index}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(row.batchNo)}
+                    onChange={() => handleRowSelect(row.batchNo)}
+                  />
+                </td>
+                <td>{row?.batchNo}</td>
+                <td>{row?.customerName}</td>
+                <td>{row?.receivedDate}</td>
+                <td>{row?.customerReference}</td>
+                <td>{row?.totalItemsCount}</td>
+                <td>{row?.replacedItemsCount}</td>
+                <td>{row?.cancelledItemsCount}</td>
+                <td>{row?.pendingItemsCount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className="d-grid gap-2 d-md-block mt-5">

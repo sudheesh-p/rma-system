@@ -20,8 +20,7 @@
 
   .sidebar {
     width: 250px;
-    height: 100vh;
-    top: 0;
+    min-height: 100vh;
     left: 0;
     transition: transform 0.3s ease;
   }
