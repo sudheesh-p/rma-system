@@ -14,7 +14,8 @@ const useFetchList = (url) =>{
           }
           // Parse the response body (it's already JSON)
           const data = await response.json();
-          setFetchList(data?.body)
+          const dataList = data?.body ? data?.body : data;
+          setFetchList(dataList);
         } catch (error) {
           console.error('Error fetching list:', error);
         }

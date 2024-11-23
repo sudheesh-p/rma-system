@@ -18,7 +18,7 @@ function App() {
           element: <RecieptReturns />,
         },
         {
-          path: '/batch-management',
+          path: '/batch-management/:id?',
           element: <BatchManagement />
         },
         {
