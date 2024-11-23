@@ -3,3 +3,4 @@ export const FETCH_PRODUCT_LIST ='https://mp8mtet7fa.execute-api.ap-southeast-3.
 export const FETCH_BATCH_LIST =  'https://l2r02tgm81.execute-api.ap-southeast-3.amazonaws.com/dev/get-all-batches';
                                 // 'https://79a6kxbsdg.execute-api.ap-southeast-3.amazonaws.com/dev/list-batches' ;
 export const FETCH_BATCH_DETAILS = "https://l2r02tgm81.execute-api.ap-southeast-3.amazonaws.com/dev/get-batch"
+export const CREATE_UPDATE_BATCH = 'https://l2r02tgm81.execute-api.ap-southeast-3.amazonaws.com/dev/create-update-batch'

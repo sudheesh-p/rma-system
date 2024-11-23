@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import useFetchList from '../utils/useFetchList';
 import Toaster from '../utils/Toaster'
-import { FETCH_CUST_LIST, FETCH_PRODUCT_LIST, FETCH_BATCH_DETAILS } from '../Constants'
+import { FETCH_CUST_LIST, FETCH_PRODUCT_LIST, FETCH_BATCH_DETAILS,CREATE_UPDATE_BATCH } from '../Constants'
 
 const BatchManagement = () => {
 
@@ -14,21 +14,29 @@ const BatchManagement = () => {
   const [receivedDate, setReceivedDate] = useState('');
   const [batchId, setBatchId] = useState()
   const [showToast, setShowToast] = useState(false);
+  const [isProductListLoaded, setIsProductListLoaded] = useState(false);
   const { id } = useParams();
 
   const customerList = useFetchList(FETCH_CUST_LIST);
   const productTypeList = useFetchList(FETCH_PRODUCT_LIST)
 
+  // Call the batch details only after loading the product list
   useEffect(() => {
-    if (id) {
+    if (productTypeList.length > 0) {
+      setIsProductListLoaded(true);
+    }
+  }, [productTypeList]);
+
+  useEffect(() => {
+    if (id && isProductListLoaded) {
       fetch(`${FETCH_BATCH_DETAILS}?batchId=${id}`)
         .then(res => res.json())
         .then(data => {
-          console.log(data)
+          console.log(productTypeList)
           updateBatchDetails(data);
         })
     }
-  }, [id])
+  }, [id, isProductListLoaded])
   // Function to add a new product
   const handleAddRow = () => {
     // Create a new product with default or empty values
@@ -76,7 +84,7 @@ const BatchManagement = () => {
       }))
     };
     try {
-      const response = await fetch('https://l2r02tgm81.execute-api.ap-southeast-3.amazonaws.com/dev/create-update-batch', {
+      const response = await fetch(CREATE_UPDATE_BATCH, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -95,20 +103,20 @@ const BatchManagement = () => {
       console.error("Error:", error);
     }
   }
-  function updateBatchDetails(result){
-        setBatchId(result?.batchId);
-        setCustomerId(result?.customerId);
-        setCustomerReference(result?.customerReference);
-        setReceivedDate(result?.receivedDate);
-        // Update products with new batchProductId from the response
-        const updatedProducts = result?.batchProducts.map((updatedProduct, index) => ({
-          id: products[index]?.id || index + 1,
-          productId: updatedProduct?.productId,
-          productQty: updatedProduct?.productQty,
-          remarks: updatedProduct?.remarks,
-          batchProductId: updatedProduct?.batchProductId
-        }));
-        setProducts(updatedProducts);
+  function updateBatchDetails(result) {
+    setBatchId(result?.batchId);
+    setCustomerId(result?.customerId);
+    setCustomerReference(result?.customerReference);
+    setReceivedDate(result?.receivedDate);
+    // Update products with new batchProductId from the response
+    const updatedProducts = result?.batchProducts.map((updatedProduct, index, key) => ({
+      id: products[index]?.id || index + 1,
+      productId: updatedProduct?.productId,
+      productQty: updatedProduct?.productQty,
+      remarks: updatedProduct?.remarks,
+      batchProductId: updatedProduct?.batchProductId
+    }));
+    setProducts(updatedProducts);
   }
   return (
     <div className="container mt-5">
@@ -193,6 +201,7 @@ const BatchManagement = () => {
                   <select
                     name="productId"
                     className="form-select"
+                    value={row.productId}
                     onChange={(e) => handleInputChange(index, 'productId', e.target.value)}
                   >
                     <option>Select product type</option>
@@ -207,6 +216,7 @@ const BatchManagement = () => {
                   <input
                     type="number"
                     className="form-control"
+                    value={row.productQty}
                     onChange={(e) => handleInputChange(index, 'productQty', e.target.value)}
                   />
                 </td>
@@ -214,6 +224,7 @@ const BatchManagement = () => {
                   <input
                     type="text"
                     className="form-control"
+                    value={row.remarks}
                     onChange={(e) => handleInputChange(index, 'remarks', e.target.value)}
                   />
                 </td>
