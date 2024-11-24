@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import useFetchList from '../utils/useFetchList';
 import Toaster from '../utils/Toaster'
+import BatchProductDetailsModal from './BatchProductDetailsModal'
 import { FETCH_CUST_LIST, FETCH_PRODUCT_LIST, FETCH_BATCH_DETAILS,CREATE_UPDATE_BATCH } from '../Constants'
 
 const BatchManagement = () => {
@@ -15,6 +16,8 @@ const BatchManagement = () => {
   const [batchId, setBatchId] = useState()
   const [showToast, setShowToast] = useState(false);
   const [isProductListLoaded, setIsProductListLoaded] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedBatchProductId, setSelectedBatchProductId] = useState(null);
   const { id } = useParams();
 
   const customerList = useFetchList(FETCH_CUST_LIST);
@@ -118,6 +121,10 @@ const BatchManagement = () => {
     }));
     setProducts(updatedProducts);
   }
+  const handleViewProduct = (batchProducId) =>{
+      setSelectedBatchProductId(batchProducId);
+      setShowPopup(true);
+  }
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -185,6 +192,7 @@ const BatchManagement = () => {
               <th>Product</th>
               <th>Qty</th>
               <th>Remarks</th>
+              {batchId && ( <th>Actions</th>)}
             </tr>
           </thead>
           <tbody>
@@ -228,6 +236,9 @@ const BatchManagement = () => {
                     onChange={(e) => handleInputChange(index, 'remarks', e.target.value)}
                   />
                 </td>
+               { batchId && (<td>
+                  <button type="button" className="btn btn-outline-primary" disabled={!row.batchProductId} onClick={() => handleViewProduct(row.batchProductId)}>Edit/View</button>
+                </td>) }
               </tr>
             ))}
           </tbody>
@@ -242,6 +253,14 @@ const BatchManagement = () => {
           show={showToast}
           onClose={() => setShowToast(false)}
         />
+      </div>
+      <div>
+      {showPopup && (
+          <BatchProductDetailsModal
+            show={showPopup}
+            batchProductId={selectedBatchProductId}
+            onClose={() => setShowPopup(false)}
+          />)}
       </div>
     </div>
   )
