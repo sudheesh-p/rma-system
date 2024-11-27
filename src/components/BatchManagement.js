@@ -9,7 +9,6 @@ import { FETCH_CUST_LIST, FETCH_PRODUCT_LIST, FETCH_BATCH_DETAILS,CREATE_UPDATE_
 const BatchManagement = () => {
 
   const [products, setProducts] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
   const [customerId, setCustomerId] = useState('');
   const [customerReference, setCustomerReference] = useState('');
   const [receivedDate, setReceivedDate] = useState('');
@@ -46,25 +45,7 @@ const BatchManagement = () => {
     const newProduct = { id: products?.length + 1, batchProductId: 0, productId: '', productQty: '', remarks: '' };
     setProducts([...products, newProduct]);
   };
-
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedProducts(products.map((row) => row.id));
-    }
-    else {
-      setSelectedProducts([]); // Deselect all items
-    }
-  }
-  // Handle individual row selection
-  const handleRowSelect = (rowId) => {
-    setSelectedProducts((prevSelected) => {
-      if (prevSelected.includes(rowId)) {
-        return prevSelected.filter((item) => item !== rowId);
-      } else {
-        return [...prevSelected, rowId];
-      }
-    });
-  };
+  
 
   const handleInputChange = (index, field, value) => {
     setProducts(
@@ -182,13 +163,6 @@ const BatchManagement = () => {
         <table className="table">
           <thead className='table-dark'>
             <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  onChange={handleSelectAll}
-                  checked={selectedProducts.length === products.length}
-                />
-              </th>
               <th>Product</th>
               <th>Qty</th>
               <th>Remarks</th>
@@ -199,17 +173,11 @@ const BatchManagement = () => {
             {products.map((row, index) => (
               <tr key={index}>
                 <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedProducts.includes(row.id)}
-                    onChange={() => handleRowSelect(row.id)}
-                  />
-                </td>
-                <td>
                   <select
                     name="productId"
                     className="form-select"
                     value={row.productId}
+                    disabled={row.batchProductId}
                     onChange={(e) => handleInputChange(index, 'productId', e.target.value)}
                   >
                     <option>Select product type</option>
@@ -225,6 +193,7 @@ const BatchManagement = () => {
                     type="number"
                     className="form-control"
                     value={row.productQty}
+                    disabled={row.batchProductId}
                     onChange={(e) => handleInputChange(index, 'productQty', e.target.value)}
                   />
                 </td>
@@ -233,6 +202,7 @@ const BatchManagement = () => {
                     type="text"
                     className="form-control"
                     value={row.remarks}
+                    disabled={row.batchProductId}
                     onChange={(e) => handleInputChange(index, 'remarks', e.target.value)}
                   />
                 </td>
@@ -245,7 +215,6 @@ const BatchManagement = () => {
         </table>
       </div>)}
       <div className="d-flex gap-2 d-md-block mt-5">
-        <button className="btn btn-danger me-md-3" type="button">Delete Product</button>
         {batchId && <button className="btn btn-success me-md-3" type="button">Print Batch Barcode</button>}
         <button className="btn btn-primary me-md-3" type="button" onClick={handleBatchSave}>{batchId ? 'Update Batch' : 'Save Batch'}</button>
         <Toaster

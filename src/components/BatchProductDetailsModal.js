@@ -5,6 +5,7 @@ import { FETCH_BATCH_PRODCUT_DETAILS } from '../Constants'
 
 const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
     const [batchProductDetails, setBatchProductDetails] = useState(null);
+    const [selectedBatchProducts, setSelectedBatchProducts] = useState([])
     useEffect(() => {
         if (batchProductId) {
             // Fetch product details based on batchProductId
@@ -17,6 +18,25 @@ const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
                 .catch((err) => console.error("Error fetching product details:", err));
         }
     }, [batchProductId]);
+
+    const handleSelectAll = (e) => {
+        if (e.target.checked) {
+         setSelectedBatchProducts(batchProductDetails.map((row) => row.itemId));
+        }
+        else {
+            setSelectedBatchProducts([]); // Deselect all items
+        }
+    }
+    // Handle individual row selection
+    const handleRowSelect = (rowId) => {
+      setSelectedBatchProducts((prevSelected) => {
+        if (prevSelected.includes(rowId)) {
+          return prevSelected.filter((item) => item !== rowId);
+        } else {
+          return [...prevSelected, rowId];
+        }
+      });
+    };
     return (
         <div
             className={`modal fade ${show ? 'show d-block' : ''}`}
@@ -41,13 +61,21 @@ const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
                             className="btn-close"
                             aria-label="Close"
                             onClick={onClose}
-                        ></button>
+                        >
+                        </button>
                     </div>
                     <div className="modal-body">
                         <div className='table-responsive col-md-10 mb-3'>
                             <table className="table table-bordered">
                                 <thead className='table-dark'>
                                     <tr>
+                                        <th>
+                                            <input
+                                            type="checkbox"
+                                            onChange={handleSelectAll}
+                                            checked={selectedBatchProducts?.length === batchProductDetails?.length}
+                                            />
+                                        </th>
                                         <th>Item Barcode</th>
                                         <th>Warranty Date</th>
                                         <th>Supplier Code</th>
@@ -60,6 +88,14 @@ const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
                                 <tbody>
                                     {batchProductDetails?.map((row, index) => (
                                         <tr key={index}>
+                                            <td>
+                                                <input
+                                                 type="checkbox"
+                                                 checked={selectedBatchProducts.includes(row.itemId)}
+                                                 onChange={() => handleRowSelect(row.itemId)}
+                                                >
+                                                </input>
+                                            </td>
                                             <td>{row?.barcode}</td>
                                             <td>{row?.warrantyDate}</td>
                                             <td></td>

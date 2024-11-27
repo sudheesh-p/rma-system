@@ -49,9 +49,8 @@ const RecieptReturns = () => {
   const navigateToCreateNBatch = () => {
     navigate('/batch-management');
   }
-  const handleEdit = () =>{
-    console.log("selected batch",selectedItems);
-    navigate(`/batch-management/${selectedItems[0]}`)
+  const handleEdit = (batchId) => {
+    navigate(`/batch-management/${batchId}`)
   }
 
   return (
@@ -135,10 +134,16 @@ const RecieptReturns = () => {
           </thead>
           <tbody>
             {filterdBatchList?.map((row, index) => (
-              <tr key={index}>
+              <tr key={index} onClick={(e) => {
+                if (e.target.tagName !== 'INPUT') {
+                  handleEdit(row.batchId)
+                }
+              }}
+              >
                 <td>
                   <input
                     type="checkbox"
+                    onClick = {(e) => e.stopPropagation()}
                     checked={selectedItems?.includes(row.batchId)}
                     onChange={() => handleRowSelect(row.batchId)}
                   />
@@ -159,9 +164,8 @@ const RecieptReturns = () => {
 
       <div className="d-grid gap-2 d-md-block mt-5">
         <button className="btn btn-danger me-md-3" type="button">Delete Batch</button>
-        <button className="btn btn-primary me-md-3" type="button" onClick={handleEdit}>Edit/View Batch</button>
+        {/* <button className="btn btn-primary me-md-3" type="button" onClick={handleEdit}>Edit/View Batch</button> */}
         <button className="btn btn-success me-md-3" type="button">Print Batch Barcode</button>
-        <button className="btn btn-info me-md-3" type="button">Generate Replace Order</button>
         <button className="btn btn-warning me-md-3" type="button">Cancellation</button>
         <button className="btn btn-secondary" type="button">Recieve Replacement</button>
       </div>
