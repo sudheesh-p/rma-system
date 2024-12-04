@@ -134,7 +134,7 @@ const RecieptReturns = () => {
           </thead>
           <tbody>
             {filterdBatchList?.map((row, index) => (
-              <tr key={index} onClick={(e) => {
+              <tr className="pe-auto" key={index} onClick={(e) => {
                 if (e.target.tagName !== 'INPUT') {
                   handleEdit(row.batchId)
                 }
@@ -162,7 +162,7 @@ const RecieptReturns = () => {
         </table>
       </div>
 
-      <div className="d-grid gap-2 d-md-block mt-5">
+      <div className="d-grid gap-2 d-md-block mt-5 text-end">
         <button className="btn btn-danger me-md-3" type="button">Delete Batch</button>
         {/* <button className="btn btn-primary me-md-3" type="button" onClick={handleEdit}>Edit/View Batch</button> */}
         <button className="btn btn-success me-md-3" type="button">Print Batch Barcode</button>

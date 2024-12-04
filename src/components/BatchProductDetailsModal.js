@@ -21,7 +21,7 @@ const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
 
     const handleSelectAll = (e) => {
         if (e.target.checked) {
-         setSelectedBatchProducts(batchProductDetails.map((row) => row.itemId));
+            setSelectedBatchProducts(batchProductDetails.map((row) => row.itemId));
         }
         else {
             setSelectedBatchProducts([]); // Deselect all items
@@ -29,13 +29,13 @@ const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
     }
     // Handle individual row selection
     const handleRowSelect = (rowId) => {
-      setSelectedBatchProducts((prevSelected) => {
-        if (prevSelected.includes(rowId)) {
-          return prevSelected.filter((item) => item !== rowId);
-        } else {
-          return [...prevSelected, rowId];
-        }
-      });
+        setSelectedBatchProducts((prevSelected) => {
+            if (prevSelected.includes(rowId)) {
+                return prevSelected.filter((item) => item !== rowId);
+            } else {
+                return [...prevSelected, rowId];
+            }
+        });
     };
     return (
         <div
@@ -64,52 +64,63 @@ const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
                         >
                         </button>
                     </div>
-                    <div className="modal-body">
-                        <div className='table-responsive col-md-10 mb-3'>
-                            <table className="table table-bordered">
-                                <thead className='table-dark'>
-                                    <tr>
-                                        <th>
-                                            <input
-                                            type="checkbox"
-                                            onChange={handleSelectAll}
-                                            checked={selectedBatchProducts?.length === batchProductDetails?.length}
-                                            />
-                                        </th>
-                                        <th>Item Barcode</th>
-                                        <th>Warranty Date</th>
-                                        <th>Supplier Code</th>
-                                        <th>Supplier ID</th>
-                                        <th>Model No</th>
-                                        <th>Remarks</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {batchProductDetails?.map((row, index) => (
-                                        <tr key={index}>
-                                            <td>
-                                                <input
-                                                 type="checkbox"
-                                                 checked={selectedBatchProducts.includes(row.itemId)}
-                                                 onChange={() => handleRowSelect(row.itemId)}
-                                                >
-                                                </input>
-                                            </td>
-                                            <td>{row?.barcode}</td>
-                                            <td>{row?.warrantyDate}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{row?.serialNumber}</td>
-                                            <td>{row?.remarks}</td>
-                                            <td></td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                    <div className="modal-body" style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div className="container mt-5">
+                            <div className='row'>
+                                <div className='table-responsive col-md-10 mb-3'>
+                                    <table className="table table-bordered">
+                                        <thead className='table-dark'>
+                                            <tr>
+                                                <th>
+                                                    <input
+                                                        type="checkbox"
+                                                        onChange={handleSelectAll}
+                                                        checked={selectedBatchProducts?.length === batchProductDetails?.length}
+                                                    />
+                                                </th>
+                                                <th>Item Barcode</th>
+                                                <th>Warranty Date</th>
+                                                <th>Supplier Code</th>
+                                                <th>Supplier ID</th>
+                                                <th>Model No</th>
+                                                <th>Remarks</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {batchProductDetails?.map((row, index) => (
+                                                <tr key={index}>
+                                                    <td>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedBatchProducts.includes(row.itemId)}
+                                                            onChange={() => handleRowSelect(row.itemId)}
+                                                        >
+                                                        </input>
+                                                    </td>
+                                                    <td>{row?.barcode}</td>
+                                                    <td>{row?.warrantyDate}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>{row?.serialNumber}</td>
+                                                    <td>{row?.remarks}</td>
+                                                    <td></td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div className='row'>
+                                <div className="d-flex gap-2 d-md-block mt-5 text-end">
+                                    <button className="btn btn-danger me-md-3" type="button">Delete Item</button>
+                                    <button className="btn btn-success me-md-3" type="button">Print Item Barcode</button>
+                                    <button className="btn btn-primary me-md-3" type="button">Mark as Missing Item</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="modal-footer">
+                    {/* <div className="modal-footer">
                         <button
                             type="button"
                             className="btn btn-secondary"
@@ -117,10 +128,11 @@ const BatchProductDetailsModal = ({ show, batchProductId, onClose }) => {
                         >
                             Close
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
+
     )
 }
 

@@ -214,7 +214,7 @@ const BatchManagement = () => {
           </tbody>
         </table>
       </div>)}
-      <div className="d-flex gap-2 d-md-block mt-5">
+      <div className="d-flex gap-2 d-md-block mt-5 text-end">
         {batchId && <button className="btn btn-success me-md-3" type="button">Print Batch Barcode</button>}
         <button className="btn btn-primary me-md-3" type="button" onClick={handleBatchSave}>{batchId ? 'Update Batch' : 'Save Batch'}</button>
         <Toaster
